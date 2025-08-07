@@ -17,11 +17,12 @@ This system uses multiple specialized AI agents built with the **OpenAI Agents S
    pip install -r requirements.txt
    ```
 
-2. **Set up your OpenAI API key:**
+2. **Set up your API keys:**
    - Copy `.env.example` to `.env`
-   - Add your OpenAI API key to the `.env` file:
+   - Add your API keys to the `.env` file:
      ```
      OPENAI_API_KEY=sk-your-key-here
+     SERPER_API_KEY=your-serper-api-key-here
      ```
 
 3. **Run the program:**
@@ -29,14 +30,62 @@ This system uses multiple specialized AI agents built with the **OpenAI Agents S
    python main.py
    ```
 
+## 🔍 Web Search Integration
+
+The Research Assistant now includes **real-time web search capabilities** using the Serper API:
+
+- **Current Information**: Gathers the latest facts, statistics, and trends
+- **News Integration**: Includes recent news and developments
+- **Multiple Search Types**: General search, news search, and statistical data search
+- **Source Citations**: Provides sources and links for better credibility
+
+### Getting Serper API Key:
+1. Visit [Serper.dev](https://serper.dev)
+2. Sign up for a free account
+3. Get your API key from the dashboard
+4. Add it to your `.env` file
+
+## 🔧 Monitoring Tool Usage
+
+To verify that the web search tool is working and being used:
+
+### Quick Check:
+```bash
+python web_search_monitor.py
+```
+
+### Test the Enhanced Researcher:
+```bash
+python test_researcher.py
+```
+
+### Real-time Monitoring:
+The system includes comprehensive logging that shows:
+- ✅ When web searches are initiated
+- 📊 Number of results found
+- 📰 News vs. general search activities
+- ❌ Any API errors or issues
+- 📈 Usage statistics
+
+### Features for Tracking Tool Usage:
+- **Console Logging**: Real-time search activities with emojis
+- **Search Statistics**: Track total searches and timing
+- **Usage Reports**: Historical data and session tracking
+- **Error Monitoring**: Clear error messages for troubleshooting
+
 ## 🤖 Agent Architecture
 
 The system includes seven specialized agents built with the OpenAI Agents SDK:
 
-### 1. **Research Assistant**
-- **Role**: Gathers comprehensive information and insights
-- **Specialization**: Fact-finding, statistics, current information
-- **Output**: Detailed research summary
+### 1. **Research Assistant** 🔍
+- **Role**: Gathers comprehensive information and insights with real-time web search
+- **Specialization**: Fact-finding, statistics, current information, news analysis
+- **Features**: 
+  - Real-time web search using Serper API
+  - News integration for latest developments
+  - Statistical data gathering
+  - Source citations and links
+- **Output**: Detailed research summary with current data
 
 ### 2. **SEO Keyword Expert**
 - **Role**: Identifies SEO-relevant keywords and phrases
