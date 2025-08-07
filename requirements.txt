@@ -1,0 +1,4 @@
+openai-agents
+openai>=1.0.0
+python-dotenv
+google-search-results
