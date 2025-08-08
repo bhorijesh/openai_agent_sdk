@@ -69,11 +69,10 @@ def orchestrate_blog_creation(config: Dict[str, Any]) -> Dict[str, Any]:
     product_currency = config.get("product_currency", "")
 
     # Execute the sequential workflow with each specialized agent
-    print(f"Researching topic: {topic}")
+    print(f"Researching topic")
     research = researcher.run(topic, keywords)
     seed_keywords = keyworder.generate_seed_keywords(topic, tone, language,keywords)
     keywords_result = keyworder.run(topic, seed_keywords, tone, language,)
-    print(keywords_result)
     
     trends = trender.run(topic, keywords_result, current_year, language)
     trend_summary = ""
@@ -116,6 +115,7 @@ def orchestrate_blog_creation(config: Dict[str, Any]) -> Dict[str, Any]:
         print(f"Error processing outline data: {e}")
         outline = outline_result  
     
+    print(f"Outline created: {outline}")
      
     draft = writer.run(
         outline=outline, 

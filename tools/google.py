@@ -99,7 +99,7 @@ class GoogleKeywordIdeaGenerator:
             request.geo_target_constants.append(
                 f"geoTargetConstants/{self.location_id}"
             )
-        request.customer_id = 
+        request.customer_id = "6382620946"
         request.include_adult_keywords = False
         request.keyword_plan_network = keyword_plan_network
         request.historical_metrics_options.include_average_cpc = True

@@ -44,13 +44,12 @@ Your job:
 3. Seamlessly incorporate the provided {keywords} into titles and subtopics to maximize organic visibility.
 
 Task Instructions:
-- Generate exactly 3 original, descriptive blog titles that directly reflect the ideas and structure of {trend_summary} and {research_summary} in {language} language, focusing on how the product solves specific problems.
+- Generate exactly 4 original, descriptive blog titles that directly reflect the ideas and structure of {trend_summary} and {research_summary} in {language} language.
+- For 1-2 titles (where it makes sense based on content), incorporate quotations or tabular elements (e.g., "Top 5 Ways to...", "The Ultimate Guide: 10 Steps to...", or titles with quoted phrases) to enhance engagement and SEO appeal.
 - Ensure that all titles and subtopics are strictly unique and plagiarism-free.
-- Under each title, provide exactly 3 relevant subtopics that clearly expand on the title, helping to structure the body of the blog with emphasis on product specifications, problem-solving capabilities, and technical details.
-- Each subtopic must be keyword-integrated, specification-focused, and demonstrate how the product addresses target audience pain points.
-- Incorporate latest 2025 blog trends: include engaging quotations from industry experts, product specifications data tables, technical comparison charts, feature bullet point lists, and problem-solution interactive elements within subtopics.
-- Use trending content formats like "How This Product Solves...", "Technical Specifications: By the Numbers", "Expert Analysis of Features", "Specification Comparison Tables", "Problem vs Solution Lists", and "Feature Breakdown Charts" in subtopics.
-- Include structured data elements like product specification tables, technical feature lists, performance breakdowns, problem-solution comparisons, and organized specification bullet points to enhance readability and SEO.
+- Under each title, provide exactly 3 relevant subtopics that clearly expand on the title, helping to structure the body of the blog.
+- Each subtopic must be keyword-integrated and relevant to the target audience.
+- For ONE subtopic only (where most appropriate based on {research_summary} or {trend_summary} content), include tabular data and/or expert quotes to enhance credibility and engagement. This should be naturally integrated and data-driven based on the research findings.
 - All text must be plagiarism-free, human-like, and optimized for search engines in 2025.
 - Include an FAQ section:
 - Write exactly 3 to 5 clear and relevant FAQ questions and answers.
@@ -74,9 +73,14 @@ Return a Python list of dictionaries in the exact format:
     "title": "Blog Title",
     "subtopics": [
       "Subtopic 1 with keyword",
-      "Subtopic 2 with keyword",
+      "Subtopic 2 with keyword (enhanced with tabular data/quotes if this is the selected subtopic)",
       "Subtopic 3 with keyword"
-    ]
+    ],
+    "enhanced_subtopic": {{
+      "content_type": "table_and_quotes",  
+      "table_data": "Markdown table format with relevant data from research/trends",
+      "quotes": ["Expert quote 1 from research", "Expert quote 2 from trends"],
+    }}
   }},
   ...
   {{

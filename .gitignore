@@ -1,3 +1,8 @@
 .env
 /venv/
 /keys/
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.vscode/

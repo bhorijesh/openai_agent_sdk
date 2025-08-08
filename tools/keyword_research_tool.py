@@ -91,11 +91,9 @@ class GoogleKeywordIdeaGeneratorTool:
             seed_list = [k.strip() for k in seed_keywords.split(",") if k.strip()]
             all_keywords.extend(seed_list)
         
-        # Ensure we have at least one keyword
         if not all_keywords:
-            all_keywords = ["digital marketing"]  # Fallback keyword
+            all_keywords = ["digital marketing"]  
         
-        # Remove duplicates while preserving order
         seen = set()
         unique_keywords = []
         for keyword in all_keywords:

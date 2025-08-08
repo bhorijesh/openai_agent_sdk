@@ -10,7 +10,7 @@ def get_default_blog_config() -> Dict[str, Any]:
     return {
         "word_count": 2000,
         "url": "",  
-        "keywords": "nike shoes, running shoes, athletic footwear",  
+        "keywords": "running, fitness, health, exercise, wellness, lifestyle,diet, nutrition, motivation, training",  
         "tone": "professional",
         "language": "English",
         "audience": "general",

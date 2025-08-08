@@ -25,7 +25,7 @@ class Writer:
         blog_title = title if title else generated_title
             
         prompt = f"""
-You are an expert AI blog writer specializing in product-focused content. Write a detailed product description blog using all keywords from {final_keywords} and incorporate trends from {trend_summary}. Follow the outline in {outline} *exactly* — do not skip, rename, merge, or reorder any H2 or H3 headings.
+You are an expert AI blog writer. Write a blog using all keywords from {final_keywords} and incorporate trends from {trend_summary}. Follow the outline in {outline} *exactly* — do not skip, rename, merge, or reorder any H2 or H3 headings.
 
 Blog Outline:
 {outline}
@@ -36,22 +36,20 @@ Research Information:
 Trend Summary:
 {trend_summary}
 
-Use H2 (`##`) for main titles and H3 (`###`) for subtopics. Maintain a consistent {tone} tone, write in {language}, and strictly match the {word_count} words (±5 words). Focus on detailed product specifications, problem-solving capabilities, and comprehensive product analysis for SEO optimization.
+Use H2 (`##`) for main titles and H3 (`###`) for subtopics. Maintain a consistent {tone} tone, write in {language}, and strictly match the {word_count} words (±5 words). Optimize for SEO.
 
 Structure:
-- Begin with "## Introduction": one paragraph introducing the product-focused blog using {blog_title}. Do not insert a title here.
+- Begin with "## Introduction": one paragraph introducing the blog using {blog_title}. Do not insert a title here.
 - For body content:
   - Use H2 for each main section from the outline.
   - Use H3 for each subsection from the outline.
   - Seamlessly integrate all keywords: {final_keywords} into the prose naturally.
-  - Focus on detailed product descriptions, technical specifications, and how the product solves specific problems.
   - Use bullet points or numbered lists strictly when:
-    - Highlighting product features or technical specifications
-    - Detailing step-by-step product usage instructions
-    - Enumerating product pros/cons, benefits, or technical tips
-    - Presenting product comparison data or specification tables
-  - Otherwise, structure subsections into two well-organized, detailed paragraphs with comprehensive product information.
-- End with "## Conclusion": one paragraph summarizing the product benefits and key takeaways. Avoid generic opening phrases.
+    - Highlighting features or statistics
+    - Detailing step-by-step instructions
+    - Enumerating pros/cons or tips
+  - Otherwise, structure subsections into two well-organized paragraphs.
+- End with "## Conclusion": one paragraph summarizing the blog. Avoid generic opening phrases.
 
 Parameters:
 - Blog length: {blog_length}
@@ -69,7 +67,7 @@ Important Guidelines:
 6. Do not add content beyond what's outlined
 7. Create clear, SEO-optimized, plagiarism-free content
 
-Write the complete blog post.
+Write the complete blog post now:
 """
         
         try:
