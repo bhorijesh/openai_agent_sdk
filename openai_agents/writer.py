@@ -11,10 +11,10 @@ class Writer:
             Focus on creating content that is both informative and enjoyable to read, with clear structure and smooth flow."""
         )
     
-    def run(self, outline: str, research: str, keywords: str = "", trend_summary: str = "", 
-            tone: str = "professional", language: str = "English", word_count: int = 1200,
+    def run(self, outline: str, research: str, keywords: str , trend_summary: str , 
+            tone: str , language: str , word_count: int ,intent: str , title: str ,
             blog_length: str = "medium", include_keywords: str = "", avoid_keywords: str = "",
-            intent: str = "inform", title: str = "", generated_title: str = "") -> str:
+            generated_title: str = "") -> str:
         if not self.agent:
             return "[OpenAI API key missing]"
             

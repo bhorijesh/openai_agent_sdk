@@ -13,7 +13,7 @@ if OPENAI_API_KEY:
 
 Max_Tokens = 32768  
 
-def create_agent(name: str, instructions: str) -> Agent:
+def create_agent(name: str, instructions: str) -> Agent | None:
     """Create an agent with the given name and instructions."""
     if not OPENAI_API_KEY:
         return None
@@ -57,5 +57,8 @@ def call_openai(messages, model="gpt-4.1-mini", temperature=0.7, max_tokens=Max_
         name="Basic Agent",
         instructions="You are a helpful assistant. Follow the system instructions and respond to the user query."
     )
+    
+    if not basic_agent:
+        return "[OpenAI API key missing]"
     
     return call_openai_sync(basic_agent, prompt)

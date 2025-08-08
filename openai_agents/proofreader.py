@@ -55,11 +55,7 @@ class Proofreader:
             that strictly follows the provided outline and meets the exact word count requirement."""
         )
     
-    def run(self, draft: str, word_count: int = 1200, audience: str = "general", url: str = "") -> str:
-        if not self.agent:
-            return "[OpenAI API key missing]"
-            
-    def run(self, draft: str, word_count: int = 1200, audience: str = "general", url: str = "") -> str:
+    def run(self, draft: str, word_count: int , audience: str , url: str) -> str:
         if not self.agent:
             return "[OpenAI API key missing]"
             
@@ -99,8 +95,6 @@ Draft Blog Content:
 - Originality: 100% original content, avoid generic AI phrasing
 
 Expected Output: A fully polished, human-quality, SEO-aligned blog post ready for publication.
-
-Provide the final polished blog post:
 """
         
         try:
