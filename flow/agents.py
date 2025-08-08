@@ -1,4 +1,5 @@
 import os
+import json
 from typing import Any, Dict
 from datetime import datetime
 
@@ -11,39 +12,8 @@ from openai_agents.writer import Writer
 from openai_agents.seo_checker import SEOChecker
 from openai_agents.proofreader import Proofreader
 
-def save_final_blog_md(final_blog: str, topic: str, filename: str = None) -> str:
-    """Save final blog to Markdown file in the 'output' folder."""
-    output_dir = os.path.join(os.getcwd(), "output")
-    os.makedirs(output_dir, exist_ok=True)
-    
-    if filename is None:
-        # Create filename with timestamp
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        safe_topic = "".join(c for c in topic if c.isalnum() or c in (' ', '_')).rstrip()
-        safe_topic = safe_topic.replace(' ', '_')[:30]  
-        filename = f"blog_{safe_topic}_{timestamp}.md"
-    
-    filepath = os.path.join(output_dir, filename)
-    
-    with open(filepath, 'w', encoding='utf-8') as mdfile:
-        mdfile.write(f"# {topic}\n\n")
-        mdfile.write(final_blog)
-    
-    return filepath
 
-def orchestrate_blog_creation(topic: str) -> Dict[str, Any]:
-    """
-    Coordinate the workflow between all specialized OpenAI agents.
-    
-    This function orchestrates a multi-agent workflow where each agent has a specific role:
-    1. Researcher Agent - Gathers comprehensive information
-    2. Keyword Researcher Agent - Identifies SEO-relevant keywords
-    3. Blog Trend Researcher Agent - Analyzes current trends
-    4. Outline Creator Agent - Structures the content logically
-    5. Writer Agent - Creates engaging content
-    6. SEO Checker Agent - Optimizes for search engines
-    7. Proofreader Agent - Ensures quality and polish
-    """
+def orchestrate_blog_creation(config: Dict[str, Any]) -> Dict[str, Any]:
     # Initialize all specialized agents
     researcher = Researcher()
     keyworder = KeywordResearcher()
@@ -53,40 +23,71 @@ def orchestrate_blog_creation(topic: str) -> Dict[str, Any]:
     seo = SEOChecker()
     proofreader = Proofreader()
 
+    # Extract values from config
+    topic = config.get("topic", "")
+    keywords = config.get("keywords", "")
+    tone = config.get("tone", "professional")
+    language = config.get("language", "English")
+    current_year = config.get("current_year", "2025")
+    audience = config.get("audience", "general")
+    word_count = config.get("word_count", 1200)
+    blog_length = config.get("blog_length", "medium")
+    include_keywords = config.get("include_keywords", "")
+    avoid_keywords = config.get("avoid_keywords", "")
+    intent = config.get("intent", "inform")
+    title = config.get("title", "")
+    url = config.get("url", "")
+    generated_title = config.get("generated_title", "")
+
     # Execute the sequential workflow with each specialized agent
     print(f"Researching topic: {topic}")
-    research = researcher.run(topic)
+    research = researcher.run(topic, keywords)
+    seed_keywords = keyworder.generate_seed_keywords(topic, tone, language)
+    keywords_result = keyworder.run(topic, seed_keywords, tone, language)
+    trends = trender.run(topic, keywords_result, current_year, language)
+    trend_summary = ""
+    trending_titles = []
     
-    print("Finding relevant keywords...")
-    keywords = keyworder.run(topic)
-    
-    print("Analyzing current trends...")
-    trends = trender.run(topic)
-    
-    print("Creating content outline...")
-    outline = outliner.run(research, keywords, trends)
-    
-    print("Writing blog content...")
-    draft = writer.run(outline, research)
-    
-    print("Optimizing for SEO...")
-    seo_result = seo.run(draft, keywords)
-    
-    print("Final proofreading...")
-    final_blog = proofreader.run(seo_result)
+    if isinstance(trends, str):
+        try:
+            trends_data = json.loads(trends)
+            trend_summary = trends_data.get("summary", "")
+            trending_titles = trends_data.get("blog_titles", [])
+        except json.JSONDecodeError as e:
+            print(f"JSON parsing error: {e}")
+            trend_summary = trends  
+    else:
+        trend_summary = trends.get("summary", str(trends)) if isinstance(trends, dict) else str(trends)
+    print(f"Trend summary: {trend_summary}")
+    outline = outliner.run(keywords_result, topic, research, trend_summary)
+ 
+    draft = writer.run(
+        outline=outline, 
+        research=research, 
+        keywords=keywords_result, 
+        trend_summary=trend_summary,
+        tone=tone, 
+        language=language, 
+        word_count=word_count,
+        blog_length=blog_length, 
+        include_keywords=include_keywords, 
+        avoid_keywords=avoid_keywords,
+        intent=intent, 
+        title=topic, 
+        generated_title=generated_title
+    )
 
-    # Save only the final blog to Markdown
-    md_filename = save_final_blog_md(final_blog, topic)
     
-    print(f"Blog creation complete! Saved to: {md_filename}")
+    seo_result = seo.run(draft, keywords_result)
+    final_blog = proofreader.run(draft, word_count, audience, url)
     
-    # Return only the final blog and filename
+    # Save to MD file
+    os.makedirs("output", exist_ok=True)
+    filename = f"output/blog_{topic.replace(' ', '_')}.md"
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(f"# {topic}\n\n{final_blog}")
+    
     return {
         "final_blog": final_blog,
-        "saved_file": md_filename
-    }
 
-if __name__ == "__main__":
-    # If this file is run directly, provide a simple test
-    test_topic = "The Benefits of Remote Work"
-    result = orchestrate_blog_creation(test_topic)
+    }

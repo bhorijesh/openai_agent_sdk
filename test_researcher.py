@@ -50,7 +50,7 @@ def test_researcher():
 
 def test_web_search_directly():
     """Test the web search tool directly to see it in action."""
-    from openai_agents.web_search import web_search_tool
+    from tools.web_search import web_search_tool
     
     print("\n🔧 Testing Web Search Tool Directly")
     print("=" * 50)

@@ -11,23 +11,43 @@ class KeywordResearcher:
             that are relevant to the given topic."""
         )
     
-    def run(self, topic: str) -> str:
+    def generate_seed_keywords(self, topic: str, tone: str = "professional", language: str = "English") -> str:
+        """Generate initial seed keywords for the topic."""
         if not self.agent:
             return "[OpenAI API key missing]"
             
         prompt = f"""
-You are an expert in SEO and keyword research. Analyze the following blog topic and provide the top 10 most relevant keywords and key phrases that would help this content rank well in search engines.
+Analyze the provided {topic} and generate an initial set of relevant seed keywords.
+These keywords should be closely related to the {topic} and suitable for further keyword expansion.
+Consider the specified {tone} and {language} to ensure contextual relevance.
+Output only the generated seed keywords as a bullet point list, with no extra commentary or formatting.
 
-Topic: {topic}
+Expected Output:
+Provide a clean list of 5 seed keywords or keyphrases directly related to the {topic}.
+Format your response as a bullet point list with no additional explanation or transformation.
+"""
+        
+        try:
+            return call_openai_sync(self.agent, prompt)
+        except Exception as e:
+            return f"[Error in KeywordResearcher seed generation: {str(e)}]"
+    
+    def run(self, topic: str, keyword: str = "", tone: str = "professional", language: str = "English") -> str:
+        """Execute comprehensive keyword research."""
+        if not self.agent:
+            return "[OpenAI API key missing]"
+            
+        prompt = f"""
+Execute comprehensive keyword research to support SEO strategy for a blog post related to the {topic} and the provided seed keywords {keyword}.
+These keywords stem from detailed product information including features, specifications, and benefits.
+Consider the user's specified tone ({tone}) and language ({language}) for contextual relevance.
+Utilize the custom GoogleKeywordIdeaGeneratorTool with {topic} and {keyword} as keywords to extract raw keyword ideas.   
+Your task is strictly to extract keywords from the tool's output without modification.
 
-Please provide:
-1. Primary keywords (1-3 main keywords)
-2. Long-tail keywords (3-4 phrases)
-3. Related and semantic keywords (3-4 terms)
-
-Present them as a comma-separated list, starting with the most important keywords first.
-
-Keywords:
+Expected Output:
+Provide a clean list of 10-15 SEO-friendly keyword suggestions or keyphrases.
+Output only the 'text' fields exactly as returned by the keyword generation tool.
+Format your response as a bullet point list with no additional commentary, explanation, or transformation.
 """
         
         try:

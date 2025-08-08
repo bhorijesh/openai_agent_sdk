@@ -6,7 +6,6 @@ import asyncio
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-SERPER_API_KEY = os.getenv('SERPER_API_KEY')
 
 # Set the OpenAI API key in the environment for the agents SDK
 if OPENAI_API_KEY:

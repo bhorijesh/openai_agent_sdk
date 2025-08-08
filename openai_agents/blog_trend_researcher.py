@@ -10,28 +10,54 @@ class BlogTrendResearcher:
             that would make content more engaging and relevant to current audiences. Focus on providing actionable insights 
             about trending approaches that can make blog content more compelling and timely."""
         )
-    
-    def run(self, topic: str) -> str:
+
+    def run(self, topic: str, keywords_result: str, current_year: str = "2025", language: str = "English") -> str:
         if not self.agent:
             return "[OpenAI API key missing]"
             
         prompt = f"""
-You are a blog trend analyst. Analyze the following blog topic and identify current trends, angles, or hooks that are popular and would make this content more engaging and relevant.
+You are a blog trend researcher for {current_year}, using the Serper tool to analyze trending content related to '{topic}' with relevant search terms based on '{keywords_result}'.
+keyword: "{keywords_result}"
 
-Topic: {topic}
+Follow these strict steps:
+1. Execute a single, natural language query in Serper. Example:
+   "Current trending blog topics about {keywords_result} in {current_year}"
+2. Based on the search results:
+   - Summarize the **most recent trending blog content**, focusing on emerging keywords, styles, and angles around '{keywords_result}'.
+   - Identify the **most popular blog formats** (e.g., listicles, how-to guides, case studies, tutorials, or multimedia-heavy posts).
+   - Highlight **key subtopics, content angles, and unique themes** that are dominating the space.
+   - Keep the summary detailed, insightful, and actionable for SEO-driven blog planning.
+3. Output the result in the following **precise JSON format** (with no extra formatting):
 
-Please provide 3 trending approaches or perspectives that could make this blog post more compelling:
+{{
+  "summary": "Detailed paragraph summary based on search results covering trending content, top formats, and standout themes.",
+  "blog_titles": [
+    "Highly compelling, SEO-friendly blog titles using a keyword",
+    "Another trending title with a keyword",
+    "Outcome-focused blog with a keyword",
+    "Solution-oriented  post featuring a keyword",
+    "Transformation-focused using a keyword",
+    "Value-driven content with a keyword"
+  ]
+}}
 
-1. Current trend #1: [Describe the trend and how it relates to the topic]
-2. Current trend #2: [Describe another trending angle]
-3. Current trend #3: [Describe a third trending perspective]
+Important:
+- Do not add any markdown, code formatting, or additional explanations.
+- Ensure the JSON output is the **only output**.
+- Craft each 'blog_title' to be highly compelling, SEO-friendly, and directly incorporate '{keywords_result}', aligned with trending styles for 2025 in {language} Language.
 
-For each trend, explain:
-- What makes it currently relevant
-- How it can be applied to this topic
-- Why it would engage readers
-
-Trends:
+Expected Output:
+{{
+  "summary": "Detailed paragraph summary based on search results covering trending content, top formats, and standout themes.",
+  "blog_titles": [
+    "Highly compelling, SEO-friendly blog titles using a keyword",
+    "Another trending title with a keyword",
+    "Outcome-focused blog with a keyword",
+    "Solution-oriented  post featuring a keyword",
+    "Transformation-focused using a keyword",
+    "Value-driven content with a keyword"
+  ]
+}}
 """
         
         try:

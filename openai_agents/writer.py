@@ -11,12 +11,21 @@ class Writer:
             Focus on creating content that is both informative and enjoyable to read, with clear structure and smooth flow."""
         )
     
-    def run(self, outline: str, research: str) -> str:
+    def run(self, outline: str, research: str, keywords: str = "", trend_summary: str = "", 
+            tone: str = "professional", language: str = "English", word_count: int = 1200,
+            blog_length: str = "medium", include_keywords: str = "", avoid_keywords: str = "",
+            intent: str = "inform", title: str = "", generated_title: str = "") -> str:
         if not self.agent:
             return "[OpenAI API key missing]"
             
+        # Use provided keywords or fallback to include_keywords
+        final_keywords = keywords if keywords else include_keywords
+        
+        # Use provided title or generated_title
+        blog_title = title if title else generated_title
+            
         prompt = f"""
-You are a professional blog writer. Write a comprehensive, engaging blog post based on the following outline and research. 
+You are an expert AI blog writer. Write a blog using all keywords from {final_keywords} and incorporate trends from {trend_summary}. Follow the outline in {outline} *exactly* — do not skip, rename, merge, or reorder any H2 or H3 headings.
 
 Blog Outline:
 {outline}
@@ -24,19 +33,41 @@ Blog Outline:
 Research Information:
 {research}
 
-Instructions for writing:
-1. Use a friendly, engaging tone that connects with readers
-2. Expand each section from the outline into detailed, informative paragraphs
-3. Incorporate the research findings naturally throughout the content
-4. Use clear, readable language that's accessible to a broad audience
-5. Include smooth transitions between sections
-6. Make the content actionable and valuable for readers
-7. Aim for approximately 1000-1500 words
-8. Use subheadings to break up the content and improve readability
+Trend Summary:
+{trend_summary}
+
+Use H2 (`##`) for main titles and H3 (`###`) for subtopics. Maintain a consistent {tone} tone, write in {language}, and strictly match the {word_count} words (±5 words). Optimize for SEO.
+
+Structure:
+- Begin with "## Introduction": one paragraph introducing the blog using {blog_title}. Do not insert a title here.
+- For body content:
+  - Use H2 for each main section from the outline.
+  - Use H3 for each subsection from the outline.
+  - Seamlessly integrate all keywords: {final_keywords} into the prose naturally.
+  - Use bullet points or numbered lists strictly when:
+    - Highlighting features or statistics
+    - Detailing step-by-step instructions
+    - Enumerating pros/cons or tips
+  - Otherwise, structure subsections into two well-organized paragraphs.
+- End with "## Conclusion": one paragraph summarizing the blog. Avoid generic opening phrases.
+
+Parameters:
+- Blog length: {blog_length}
+- Include keywords: {final_keywords}
+- Avoid keywords: {avoid_keywords}
+- Intent: {intent}
+- Target word count: {word_count} words
+
+Important Guidelines:
+1. Follow the outline structure exactly - do not add, remove, or modify headings
+2. Incorporate research findings naturally throughout the content
+3. Use trends from trend summary to make content current and relevant
+4. Ensure all keywords are integrated seamlessly into the text
+5. Maintain the specified tone and language throughout
+6. Do not add content beyond what's outlined
+7. Create clear, SEO-optimized, plagiarism-free content
 
 Write the complete blog post now:
-
-Blog Post:
 """
         
         try:
