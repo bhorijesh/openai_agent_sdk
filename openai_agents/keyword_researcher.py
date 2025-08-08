@@ -12,20 +12,20 @@ class KeywordResearcher:
             that are relevant to the given topic."""
         )
         self.keyword_tool = keyword_tool
-    
-    def generate_seed_keywords(self, topic: str, tone: str = "professional", language: str = "English") -> str:
+
+    def generate_seed_keywords(self, topic: str, tone: str , language: str , keywords: str) -> str:
         """Generate initial seed keywords for the topic."""
         if not self.agent:
             return "[OpenAI API key missing]"
             
         prompt = f"""
-Analyze the provided {topic} and generate an initial set of relevant seed keywords.
+Analyze the provided {topic} and {keywords} and generate an initial set of relevant seed keywords.
 These keywords should be closely related to the {topic} and suitable for further keyword expansion.
 Consider the specified {tone} and {language} to ensure contextual relevance.
 Output only the generated seed keywords as a bullet point list, with no extra commentary or formatting.
 
 Expected Output:
-Provide a clean list of 5 seed keywords or keyphrases directly related to the {topic}.
+Provide a clean list of 5 seed keywords or keyphrases directly related to the {topic} or {keywords}.
 Format your response as a bullet point list with no additional explanation or transformation.
 """
         
@@ -34,7 +34,7 @@ Format your response as a bullet point list with no additional explanation or tr
         except Exception as e:
             return f"[Error in KeywordResearcher seed generation: {str(e)}]"
     
-    def run(self, topic: str, keyword: str = "", tone: str = "professional", language: str = "English") -> str:
+    def run(self, topic: str, seed_keywords: str , tone: str , language: str) -> str:
         """Execute comprehensive keyword research."""
         if not self.agent:
             return "[OpenAI API key missing]"
@@ -42,12 +42,12 @@ Format your response as a bullet point list with no additional explanation or tr
         # Use the Google Keyword Tool to get actual keyword data
         try:
             # Get keyword ideas from Google Ads API
-            keyword_results = self.keyword_tool.search_and_format(topic, keyword)
+            keyword_results = self.keyword_tool.search_and_format(topic, seed_keywords)
             
             # If we got results from the tool, format them properly
             if keyword_results and keyword_results != "No keyword results available":
                 prompt = f"""
-Based on the keyword research for {topic} with seed keywords {keyword}, here are the raw keyword suggestions from Google Ads API:
+Based on the keyword research for {topic} with seed keywords {seed_keywords}, here are the raw keyword suggestions from Google Ads API:
 
 {keyword_results}
 
@@ -63,7 +63,7 @@ Select the most relevant keywords from the provided list above.
             else:
                 # Fallback to AI-generated keywords if tool fails
                 prompt = f"""
-Execute comprehensive keyword research to support SEO strategy for a blog post related to the {topic} and the provided seed keywords {keyword}.
+Execute comprehensive keyword research to support SEO strategy for a blog post related to the {topic} and the provided seed keywords {seed_keywords}.
 Consider the user's specified tone ({tone}) and language ({language}) for contextual relevance.
 Note: Google Ads API data is currently unavailable, so generate research-based keyword suggestions.
 
@@ -76,7 +76,7 @@ Format your response as a bullet point list with no additional commentary, expla
             print(f"⚠️ Keyword tool error: {str(tool_error)}, falling back to AI generation")
             # Fallback prompt if tool fails
             prompt = f"""
-Execute comprehensive keyword research to support SEO strategy for a blog post related to the {topic} and the provided seed keywords {keyword}.
+Execute comprehensive keyword research to support SEO strategy for a blog post related to the {topic} and the provided seed keywords {seed_keywords}.
 Consider the user's specified tone ({tone}) and language ({language}) for contextual relevance.
 
 Expected Output:

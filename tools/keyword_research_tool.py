@@ -60,26 +60,50 @@ class GoogleKeywordIdeaGeneratorTool:
             
         except Exception as e:
             return [{"error": f"Keyword generation failed: {str(e)}"}]
-    
-    def search_keywords(self, topic: str, seed_keywords: str = "") -> List[Dict]:
+
+    def search_keywords(self, topic: str, keywords: str, seed_keywords: str = "") -> List[Dict]:
         """
         Search for keywords based on topic and seed keywords.
         Convenience method for the keyword researcher.
         
         Args:
             topic (str): Main topic for keyword research
+            keywords (str): Additional keywords
             seed_keywords (str): Comma-separated seed keywords
             
         Returns:
             List[Dict]: List of keyword data
         """
         # Combine topic and seed keywords
-        all_keywords = [topic]
-        if seed_keywords:
+        all_keywords = []
+        
+        # Add topic if it's not empty
+        if topic and topic.strip():
+            all_keywords.append(topic.strip())
+        
+        # Add keywords if provided
+        if keywords and keywords.strip():
+            keywords_list = [k.strip() for k in keywords.split(",") if k.strip()]
+            all_keywords.extend(keywords_list)
+            
+        # Add seed keywords if provided
+        if seed_keywords and seed_keywords.strip():
             seed_list = [k.strip() for k in seed_keywords.split(",") if k.strip()]
             all_keywords.extend(seed_list)
         
-        return self.generate_keyword_ideas(keywords=all_keywords)
+        # Ensure we have at least one keyword
+        if not all_keywords:
+            all_keywords = ["digital marketing"]  # Fallback keyword
+        
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_keywords = []
+        for keyword in all_keywords:
+            if keyword.lower() not in seen:
+                seen.add(keyword.lower())
+                unique_keywords.append(keyword)
+        
+        return self.generate_keyword_ideas(keywords=unique_keywords)
     
     def get_keyword_metrics(self, keywords: List[str]) -> List[Dict]:
         """
@@ -126,8 +150,12 @@ class GoogleKeywordIdeaGeneratorTool:
         Returns:
             str: Formatted keyword list
         """
-        results = self.search_keywords(topic, seed_keywords)
-        return self.format_for_researcher(results)
+        try:
+            results = self.search_keywords(topic, "", seed_keywords)
+            return self.format_for_researcher(results)
+        except Exception as e:
+            print(f"⚠️ Keyword tool search error: {str(e)}")
+            return "No keyword results available"
 
 
 # Convenience instance for easy import

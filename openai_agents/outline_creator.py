@@ -44,10 +44,13 @@ Your job:
 3. Seamlessly incorporate the provided {keywords} into titles and subtopics to maximize organic visibility.
 
 Task Instructions:
-- Generate exactly 4 original, descriptive blog titles that directly reflect the ideas and structure of {trend_summary} and {research_summary} in {language} language.
+- Generate exactly 3 original, descriptive blog titles that directly reflect the ideas and structure of {trend_summary} and {research_summary} in {language} language, focusing on how the product solves specific problems.
 - Ensure that all titles and subtopics are strictly unique and plagiarism-free.
-- Under each title, provide exactly 3 relevant subtopics that clearly expand on the title, helping to structure the body of the blog.
-- Each subtopic must be keyword-integrated and relevant to the target audience.
+- Under each title, provide exactly 3 relevant subtopics that clearly expand on the title, helping to structure the body of the blog with emphasis on product specifications, problem-solving capabilities, and technical details.
+- Each subtopic must be keyword-integrated, specification-focused, and demonstrate how the product addresses target audience pain points.
+- Incorporate latest 2025 blog trends: include engaging quotations from industry experts, product specifications data tables, technical comparison charts, feature bullet point lists, and problem-solution interactive elements within subtopics.
+- Use trending content formats like "How This Product Solves...", "Technical Specifications: By the Numbers", "Expert Analysis of Features", "Specification Comparison Tables", "Problem vs Solution Lists", and "Feature Breakdown Charts" in subtopics.
+- Include structured data elements like product specification tables, technical feature lists, performance breakdowns, problem-solution comparisons, and organized specification bullet points to enhance readability and SEO.
 - All text must be plagiarism-free, human-like, and optimized for search engines in 2025.
 - Include an FAQ section:
 - Write exactly 3 to 5 clear and relevant FAQ questions and answers.

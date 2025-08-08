@@ -1,8 +1,11 @@
+import keyword
 import os
 import json
 import re
 from typing import Any, Dict
 from datetime import datetime
+
+from colorama import init
 
 # Import all agents from the agents package
 from openai_agents.researcher import Researcher
@@ -12,6 +15,7 @@ from openai_agents.outline_creator import OutlineCreator
 from openai_agents.writer import Writer
 from openai_agents.seo_checker import SEOChecker
 from openai_agents.proofreader import Proofreader
+import random
 
 
 def safe_json_loads_with_fix(json_str: str) -> list:
@@ -55,7 +59,6 @@ def orchestrate_blog_creation(config: Dict[str, Any]) -> Dict[str, Any]:
     title = config.get("title", "")
     url = config.get("url", "")
     faq = config.get("faq", False)
-    generated_title = config.get("generated_title", "")
     has_product = config.get("has_product", False)
     product_name = config.get("product_name", "")
     product_url = config.get("product_url", "")
@@ -68,12 +71,9 @@ def orchestrate_blog_creation(config: Dict[str, Any]) -> Dict[str, Any]:
     # Execute the sequential workflow with each specialized agent
     print(f"Researching topic: {topic}")
     research = researcher.run(topic, keywords)
-    print(research)
-    seed_keywords = keyworder.generate_seed_keywords(topic, tone, language)
-
-    keywords_result = keyworder.run(topic, seed_keywords, tone, language)
-    print(f"Keywords result: {keywords_result}")
-
+    seed_keywords = keyworder.generate_seed_keywords(topic, tone, language,keywords)
+    keywords_result = keyworder.run(topic, seed_keywords, tone, language,)
+    print(keywords_result)
     
     trends = trender.run(topic, keywords_result, current_year, language)
     trend_summary = ""
@@ -89,7 +89,12 @@ def orchestrate_blog_creation(config: Dict[str, Any]) -> Dict[str, Any]:
     #         trend_summary = trends  
     # else:
     trend_summary = trends.get("summary", str(trends)) if isinstance(trends, dict) else str(trends)
-    research_summary = research  # Define the missing variable
+    generated_title = trends.get("blog_titles", []) if isinstance(trends, dict) else []
+    if generated_title:
+        generated_title = random.choice(generated_title)
+    else:
+        generated_title = ""
+
 
     outline_result = outliner.run(
         keywords=keywords_result,
@@ -110,6 +115,7 @@ def orchestrate_blog_creation(config: Dict[str, Any]) -> Dict[str, Any]:
     except Exception as e:
         print(f"Error processing outline data: {e}")
         outline = outline_result  
+    
      
     draft = writer.run(
         outline=outline, 

@@ -29,33 +29,47 @@ class CountryChoices:
 
 
 class GoogleKeywordIdeaGenerator:
-    __client = GoogleAdsClient.load_from_storage(
-        getattr(settings, "GOOGLE_ADS_YAML_FILE"), version="v18"
-    )
-
     def __init__(
         self,
-        location_id: str = "",
+        location_id: str = "2840",  # Default to US
         keywords: list[str] | str | None = None,
         url: str | None = None,
     ):
+        # Initialize client
+        self.__client = GoogleAdsClient.load_from_storage(
+            getattr(settings, "GOOGLE_ADS_YAML_FILE"), version="v18"
+        )
+        
         self.page_size = 20
         self.next_page_token = None
+        
+        # Validate inputs
         if (keywords is None and url is None) or (keywords == "" and url == ""):
             raise ValueError("keywords and url: At least one of them is required")
+        
+        # Set default location if empty
+        if not location_id:
+            location_id = "2840"
+            
         if location_id not in CountryChoices.values:
             raise ValueError(
                 f"location_id should be from following items: {CountryChoices.choices}"
             )
         self.location_id = location_id
+        
+        # Process keywords
         if isinstance(keywords, list):
-            self.keywords = keywords
-
+            self.keywords = [k.strip() for k in keywords if k.strip()]
         elif isinstance(keywords, str):
-            self.keywords = keywords.split(",")
+            self.keywords = [k.strip() for k in keywords.split(",") if k.strip()]
         else:
             self.keywords = None
-        self.url = url if url != "" or url else None
+            
+        # Ensure we have at least one keyword if no URL
+        if self.keywords and not any(self.keywords):
+            self.keywords = None
+            
+        self.url = url if url and url.strip() else None
 
     def set_page_size(self, number: int):
         self.page_size = number
@@ -64,7 +78,7 @@ class GoogleKeywordIdeaGenerator:
         self.page_token = token
 
     def set_client_yaml_path(self, path: str):
-        self.__client = GoogleAdsClient.load_from_storage(path, version="v15")
+        self.__client = GoogleAdsClient.load_from_storage(path, version="v18")
 
     def __configure_request(self):
         language_rn = self.__client.get_service(
@@ -85,7 +99,7 @@ class GoogleKeywordIdeaGenerator:
             request.geo_target_constants.append(
                 f"geoTargetConstants/{self.location_id}"
             )
-        request.customer_id = os.getenv("GOOGLE_ADS_CUSTOMER_ID")
+        request.customer_id = 
         request.include_adult_keywords = False
         request.keyword_plan_network = keyword_plan_network
         request.historical_metrics_options.include_average_cpc = True
